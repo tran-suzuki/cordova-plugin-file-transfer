@@ -519,7 +519,13 @@ exec(win, fail, 'FileTransfer', 'upload',
                                         }
                                         const reader = new Windows.Storage.Streams.DataReader(download.getResultStreamAt(0));
                                         reader.loadAsync(download.progress.bytesReceived).then(function (bytesLoaded) {
-                                            const payload = reader.readString(bytesLoaded);
+		                                    var payload
+		                                    try {
+		                                        payload = reader.readString(bytesLoaded);
+		                                    } catch (e) {
+		                                        console.error(e);
+		                                        payload = "";
+		                                    }
                                             resolve(
                                                 new FTErr(FTErr.FILE_NOT_FOUND_ERR, source, target, response.statusCode, payload, error)
                                             );
